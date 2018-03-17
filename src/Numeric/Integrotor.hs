@@ -55,17 +55,17 @@ import Numeric.Integrotor.Simpson
 -- | Typeclass for distributions used in this module.
 class Dist d where
   -- | Point density function
-  pdf          :: Floating a => a -> d a -> a
+  pdf          :: (Ord a, Floating a) => a -> d a -> a
   -- | Cumulative density function
-  cdf          :: Floating a => a -> d a -> a
+  cdf          :: (Ord a, Floating a) => a -> d a -> a
   -- | "Middle" point of a distribution, it's mean if it exists, otherwise it's
   --    some concept of a middle point for the distribution. It's used as a
   --    component to decide how to apply Simpson's rule.
-  middle       :: Floating a => d a -> a
+  middle       :: (Ord a, Floating a) => d a -> a
   -- | "Deviation" of a distribution. Should be standard deviation if it
   --   exists; otherwise some other concept of deviation. It's used as a
   --   component to decide how to apply Simpson's rule.
-  deviation    :: Floating a => d a -> a
+  deviation    :: (Ord a, Floating a) => d a -> a
 
 data NormalDistribution a = NormalDistribution !a !a
   deriving ( Eq, Ord, Show, Read, Typeable, Data, Generic, Functor, Foldable, Traversable )
@@ -127,14 +127,20 @@ stdev :: NormalDistribution a -> a
 stdev (NormalDistribution _ v) = v
 {-# INLINE stdev #-}
 
-levyPdf :: Floating a => a -> LevyDistribution a -> a
-levyPdf x (LevyDistribution mean scale)
-  = sqrt (scale/(2*pi)) * (exp (negate $ scale/(2*(x-mean)))/((x-mean)**(3/2)))
+levyPdf :: (Floating a, Eq a) => a -> LevyDistribution a -> a
+levyPdf x (LevyDistribution mean scale) =
+  let result = sqrt (scale/(2*pi)) * (exp (negate $ scale/(2*(x-mean)))/((x-mean)**(3/2)))
+   in if result /= result || result+1 == result
+        then 0
+        else result
 {-# INLINE levyPdf #-}
 
-levyCdf :: Floating a => a -> LevyDistribution a -> a
-levyCdf x (LevyDistribution mean scale)
-  = 1 - erf (sqrt $ scale / (2*(x - mean)))
+levyCdf :: (Floating a, Eq a) => a -> LevyDistribution a -> a
+levyCdf x (LevyDistribution mean scale) =
+  let result = 1 - erf (sqrt $ scale / (2*(x - mean)))
+   in if result /= result || result+1 == result
+        then 0
+        else result
 {-# INLINE levyCdf #-}
 
 cauchyPdf :: Floating a => a -> CauchyDistribution a -> a
