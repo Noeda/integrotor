@@ -193,7 +193,7 @@ probabilityFirstIsFirst nd_target rest_of_nds =
   maxpoint = max (middle nd_target) $ maximum $ fmap middle rest_of_nds
 
   maxdeviation = max (deviation nd_target) $ maximum $ fmap deviation rest_of_nds
-{-# INLINE probabilityThatIsFirst #-}
+{-# INLINE probabilityFirstIsFirst #-}
 
 -- | Same as `probabilitiyFirstIsFirst` but uses a million times more splits
 -- and extends integral approximation range.
@@ -209,5 +209,5 @@ probabilityFirstIsFirstAccurate nd_target rest_of_nds =
   maxpoint = max (middle nd_target) $ maximum $ fmap middle rest_of_nds
 
   maxdeviation = max (deviation nd_target) $ maximum $ fmap deviation rest_of_nds
-{-# INLINE probabilityThatIsFirstAccurate #-}
+{-# INLINE probabilityFirstIsFirstAccurate #-}
 
