@@ -1,0 +1,22 @@
+name:                integrotor
+version:             0.1.0.0
+synopsis:            Compute the probability of a certain problem
+license:             MIT
+license-file:        LICENSE
+author:              Mikko Juola
+maintainer:          mikjuo@gmail.com
+category:            Math
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:     Numeric.Integrotor
+                       Numeric.Integrotor.Simpson
+  build-depends:       ad
+                      ,base >=4.10 && <5.0
+                      ,mwc-random
+  hs-source-dirs:      src
+  ghc-options:         -Wall -fno-warn-name-shadowing -O2
+  default-language:    Haskell2010
+
